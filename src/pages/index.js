@@ -1,128 +1,100 @@
 import * as React from "react"
-import { Link } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
-
 import Layout from "../components/layout"
 import Seo from "../components/seo"
-import * as styles from "../components/index.module.css"
+import {
+  Box,
+  Button,
+  Center,
+  chakra,
+  Divider,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react"
+import { FaArrowRight } from "react-icons/fa"
+import { DiGithubBadge } from "react-icons/di"
+import Container from "../components/container"
+import { graphql } from "gatsby"
 
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-  },
-  {
-    text: "Examples",
-    url: "https://github.com/gatsbyjs/gatsby/tree/master/examples",
-    description:
-      "A collection of websites ranging from very basic to complex/complete that illustrate how to accomplish specific tasks within your Gatsby sites.",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Learn how to add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-  },
-]
+const IndexPage = ({ data }) => {
+  console.log(data.allMarkdownRemark.edges[2])
+  return (
+    <Layout>
+      <Seo title="Home" />
+      <Box mb={20}>
+        <Box
+          as="section"
+          pt={{ base: "10rem", md: "12rem" }}
+          pb={{ base: "0", md: "5rem" }}
+        >
+          <Container>
+            <Box textAlign="center">
+              <chakra.h1
+                maxW="680px"
+                mx="auto"
+                fontSize={{
+                  base: "2.25rem",
+                  sm: "3rem",
+                  lg: "4rem",
+                }}
+                fontFamily="heading"
+                letterSpacing="tight"
+                fontWeight="bold"
+                mb="16px"
+                lineHeight="1.2"
+              >
+                {data.allMarkdownRemark.edges[2].node.frontmatter.title} <br />
+              </chakra.h1>
 
-const samplePageLinks = [
-  {
-    text: "Page 2",
-    url: "page-2",
-    badge: false,
-    description:
-      "A simple example of linking to another page within a Gatsby site",
-  },
-  { text: "TypeScript", url: "using-typescript" },
-  { text: "Server Side Rendering", url: "using-ssr" },
-  { text: "Deferred Static Generation", url: "using-dsg" },
-]
+              <Text
+                maxW="560px"
+                mx="auto"
+                opacity={0.7}
+                fontSize={{ base: "lg", lg: "xl" }}
+                mt="6"
+              >
+                An API for smart contract developers to implement ZKP into their
+                smart contract.
+              </Text>
 
-const moreLinks = [
-  { text: "Join us on Discord", url: "https://gatsby.dev/discord" },
-  {
-    text: "Documentation",
-    url: "https://gatsbyjs.com/docs/",
-  },
-  {
-    text: "Starters",
-    url: "https://gatsbyjs.com/starters/",
-  },
-  {
-    text: "Showcase",
-    url: "https://gatsbyjs.com/showcase/",
-  },
-  {
-    text: "Contributing",
-    url: "https://www.gatsbyjs.com/contributing/",
-  },
-  { text: "Issues", url: "https://github.com/gatsbyjs/gatsby/issues" },
-]
-
-const utmParameters = `?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter`
-
-const IndexPage = () => (
-  <Layout>
-    <div className={styles.textCenter}>
-      <StaticImage
-        src="../images/example.png"
-        loading="eager"
-        width={64}
-        quality={95}
-        formats={["auto", "webp", "avif"]}
-        alt=""
-        style={{ marginBottom: `var(--space-3)` }}
-      />
-      <h1>
-        Welcome to <b>Gatsby!</b>
-      </h1>
-      <p className={styles.intro}>
-        <b>Example pages:</b>{" "}
-        {samplePageLinks.map((link, i) => (
-          <React.Fragment key={link.url}>
-            <Link to={link.url}>{link.text}</Link>
-            {i !== samplePageLinks.length - 1 && <> · </>}
-          </React.Fragment>
-        ))}
-        <br />
-        Edit <code>src/pages/index.js</code> to update this page.
-      </p>
-    </div>
-    <ul className={styles.list}>
-      {links.map(link => (
-        <li key={link.url} className={styles.listItem}>
-          <a
-            className={styles.listItemLink}
-            href={`${link.url}${utmParameters}`}
-          >
-            {link.text} ↗
-          </a>
-          <p className={styles.listItemDescription}>{link.description}</p>
-        </li>
-      ))}
-    </ul>
-    {moreLinks.map((link, i) => (
-      <React.Fragment key={link.url}>
-        <a href={`${link.url}${utmParameters}`}>{link.text}</a>
-        {i !== moreLinks.length - 1 && <> · </>}
-      </React.Fragment>
-    ))}
-  </Layout>
-)
-
+              <Divider orientation="vertical" h="60px" />
+              <Box
+                fontSize="3xl"
+                dangerouslySetInnerHTML={{
+                  __html: data.allMarkdownRemark.edges[2].node.html,
+                }}
+              />
+            </Box>
+          </Container>
+        </Box>
+      </Box>
+      <Divider />
+    </Layout>
+  )
+}
 /**
  * Head export to define metadata for the page
  *
  * See: https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-head/
  */
 export const Head = () => <Seo title="Home" />
-
 export default IndexPage
+
+export const query = graphql`
+  query {
+    allMarkdownRemark {
+      totalCount
+      edges {
+        node {
+          id
+          frontmatter {
+            date
+            description
+            title
+          }
+          html
+        }
+      }
+    }
+  }
+`
